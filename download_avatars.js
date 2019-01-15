@@ -1,15 +1,13 @@
 var request = require('request');
 var fs = require('fs');
-var GITHUBTOKEN = require('./secrets.js').GITHUB_TOKEN;
+var GITHUBTOKEN = require('./secrets.js').GITHUB_TOKEN; //getting token
 var repoOwner = [];
-repoOwner =  process.argv.slice(2);
-//var repoName =  process.argv.slice(3);
-//console.log(repoOwner);
-//console.log(GITHUBTOKEN);
+repoOwner =  process.argv.slice(2);  //getting command line args
+
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
-function getRepoContributors( cb) {
+function getRepoContributors(cb) {
   var parseObject = {};
   var options = {
     url: "https://api.github.com/repos/" + repoOwner[0] + "/" + repoOwner[1] + "/contributors",
@@ -29,12 +27,10 @@ function getRepoContributors( cb) {
       parseObject =  JSON.parse(body);
 
 
-    parseObject.forEach(function(user) {
-      //console.log(user.avatar_url);
-      downloadImageByURL(user.avatar_url, "avatars/" + user.login);
-    })
+    parseObject.forEach(function(user) { //forEach looping throgh user objects in parsed JSON
 
-    //cb(parseObject[0].avatar_url);
+      downloadImageByURL(user.avatar_url, "avatars/" + user.login); // grabbing the url for avatar and passing url and file path to downloadImageByURL function.
+    })
 
 
     }
@@ -44,16 +40,14 @@ function getRepoContributors( cb) {
 }
 
 function downloadImageByURL(url, filePath) {
-    request.get(url)               // Note 1
-       .on('error', function (err) {                                   // Note 2
-         throw err;
+  request.get(url)               //
+  .on('error', function (err) {                                   // Note 2
+    throw err;
+    })
+  .on('response', function (response) {                           // Note 3
+    console.log('Response Status Code: ', response.statusCode);
        })
-       .on('response', function (response) {                           // Note 3
-         console.log('Response Status Code: ', response.statusCode);
-       })
-       .pipe(fs.createWriteStream('./'+ filePath));               // Note 4
-
-  // ...
+  .pipe(fs.createWriteStream('./'+ filePath));               // downloading the avatar file inside specified file path with specified name (USER)
 
 
   }
