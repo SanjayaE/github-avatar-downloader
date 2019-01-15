@@ -4,7 +4,7 @@ var GITHUBTOKEN = require('./secrets.js').GITHUB_TOKEN;
 var repoOwner = [];
 repoOwner =  process.argv.slice(2);
 //var repoName =  process.argv.slice(3);
-console.log(repoOwner);
+//console.log(repoOwner);
 //console.log(GITHUBTOKEN);
 
 console.log('Welcome to the GitHub Avatar Downloader!');
@@ -20,8 +20,13 @@ function getRepoContributors( cb) {
   };
 
   request(options, function(err, res, body) {
-    cb(err);
-    parseObject =  JSON.parse(body);
+
+    if (repoOwner[1] === undefined){
+      cb("Please  specify both arguments");
+      return;
+
+    } else {
+      parseObject =  JSON.parse(body);
 
 
     parseObject.forEach(function(user) {
@@ -32,6 +37,7 @@ function getRepoContributors( cb) {
     //cb(parseObject[0].avatar_url);
 
 
+    }
   });
 
 
