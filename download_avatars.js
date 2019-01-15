@@ -14,8 +14,6 @@ function getRepoContributors(repoOwner, repoName, cb) {
       'User-Agent': 'request',
       'Authorization' : 'token ' + GITHUBTOKEN
     }
-
-
   };
 
   request(options, function(err, res, body) {
@@ -23,7 +21,8 @@ function getRepoContributors(repoOwner, repoName, cb) {
     parseObject =  JSON.parse(body);
 
     parseObject.forEach(function(user) {
-      console.log(user.avatar_url)
+      //console.log(user.avatar_url);
+      downloadImageByURL(user.avatar_url, "avatars/" + user.login);
     })
 
     //cb(parseObject[0].avatar_url);
@@ -42,7 +41,7 @@ function downloadImageByURL(url, filePath) {
        .on('response', function (response) {                           // Note 3
          console.log('Response Status Code: ', response.statusCode);
        })
-       .pipe(fs.createWriteStream('./future.jpg'));               // Note 4
+       .pipe(fs.createWriteStream('./'+ filePath));               // Note 4
 
   // ...
 
@@ -50,10 +49,10 @@ function downloadImageByURL(url, filePath) {
   }
 
 
-// getRepoContributors("jquery", "jquery", function(err, result) {
-//   console.log("Errors:", err);
-//   // console.log("Result:", result);
-// });
+getRepoContributors("jquery", "jquery", function(err, result) {
+  console.log("Errors:", err);
+  //console.log("Result:", result);
+});
 
-downloadImageByURL("https://avatars2.githubusercontent.com/u/2741?v=3&s=466", "avatars/kvirani.jpg", './future.jpg');
+// downloadImageByURL("https://avatars2.githubusercontent.com/u/2741?v=3&s=466", "avatars/kvirani.jpg", './future.jpg');
 
